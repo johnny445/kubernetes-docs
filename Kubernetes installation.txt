@@ -39,3 +39,22 @@ kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
 
 curl https://docs.projectcalico.org/manifests/calico-typha.yaml -o calico.yaml
 kubectl exec --stdin --tty ubuntu -- /bin/bash  -- to execcute conatiner on master
+
+Istio Installation Setup:
+
+$ curl -L https://istio.io/downloadIstio | sh -
+$ cd istio-1.14.3
+
+The installation directory contains:
+
+Sample applications in samples/
+The istioctl client binary in the bin/ directory.
+Add the istioctl client to your path (Linux or macOS):
+
+$ export PATH=$PWD/bin:$PATH
+
+$ istioctl install --set profile=demo -y
+
+Add a namespace label to instruct Istio to automatically inject Envoy sidecar proxies when you deploy your application later:
+
+$ kubectl label namespace default istio-injection=enabled
