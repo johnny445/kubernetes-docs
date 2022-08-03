@@ -1,0 +1,57 @@
+Kubernetes-Installation
+
+Step 1: Install Docker
+ sudo apt-get update
+ sudo apt-get install docker.io
+ docker ––version
+ 
+Step 2: Start and Enable Docker
+ sudo systemctl enable docker
+ sudo systemctl status docker
+ 
+ Install Kubernetes::
+Step 3: Add Kubernetes Signing Key
+sudo apt-get install curl
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
+
+Step 4: Add Software Repositories
+sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+
+Step 5: Kubernetes Installation Tools
+ sudo apt-get install kubeadm kubelet kubectl
+ sudo apt-mark hold kubeadm kubelet kubectl
+ kubeadm version
+ 
+ Step 6: Begin Kubernetes Deployment
+ sudo swapoff –a
+ 
+ Step 7: Assign Unique Hostname for Each Server Node 
+ sudo hostnamectl set-hostname master-node
+ sudo hostnamectl set-hostname worker01
+ 
+ Step 8: Initialize Kubernetes on Master Node
+ sudo kubeadm init --pod-network-cidr=10.244.0.0/16 
+ ---- COPY kubeadm join message at the end ----
+ kubernetes-master:~$ mkdir -p $HOME/.kube
+ kubernetes-master:~$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+ kubernetes-master:~$ sudo chown $(id -u):$(id -g) $HOME/.kube/config
+ 
+ Step 9: Deploy Pod Network to Cluster
+ sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+ kubectl get pods --all-namespaces
+ 
+ Step 10: Join Worker Node to Cluster
+ kubeadm join --discovery-token abcdef.1234567890abcdef --discovery-token-ca-cert-hash sha256:1234..cdef 1.2.3.4:6443
+ kubectl get nodes
+ 
+ ISTIO INSTALLATION
+ 
+ curl -L https://istio.io/downloadIstio | sh -
+ cd istio-1.14.3
+ export PATH=$PWD/bin:$PATH
+ istioctl install
+ kubectl label namespace default istio-injection=enabled   ---if required
+ 
+
+
+ 
