@@ -37,6 +37,8 @@ Step 5: Kubernetes Installation Tools
  kubernetes-master:~$ sudo chown $(id -u):$(id -g) $HOME/.kube/config
  
  Step 9: Deploy Pod Network to Cluster
+ curl https://docs.projectcalico.org/manifests/calico.yaml -O
+ kubectl apply -f calico.yaml
  sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
  kubectl get pods --all-namespaces
  
